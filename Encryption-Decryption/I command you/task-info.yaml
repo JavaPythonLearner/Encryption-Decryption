@@ -1,0 +1,104 @@
+type: edu
+custom_name: stage4
+files:
+- name: src/encryptdecrypt/Main.java
+  visible: true
+  text: "package encryptdecrypt;\nimport java.util.Scanner;\n\npublic class Main {\n\
+    \    \n    public static String encrpyt(String toEncrypt, int key) {\n       \
+    \ char[] chars = toEncrypt.toCharArray();\n        StringBuilder sb = new StringBuilder();\n\
+    \        \n        for (char ch : chars) {\n            sb.append((char) (ch +\
+    \ key));\n            /*\n            if (Character.isLetter(ch)) {\n        \
+    \        int index = ch + key;\n                if (index > 'z') {\n         \
+    \         index = (index -'z' - 1) + 'a';\n                }\n               \
+    \ sb.append((char) index);\n            } else {\n                sb.append(ch);\n\
+    \            }\n            */\n        }\n        return sb.toString();     \
+    \    \n    }\n    \n    public static String decrpyt(String toEncrypt, int key)\
+    \ {\n        char[] chars = toEncrypt.toCharArray();\n        StringBuilder sb\
+    \ = new StringBuilder();\n        \n        for (char ch : chars) {\n        \
+    \    sb.append((char) (ch - key));\n            /*\n            if (Character.isLetter(ch))\
+    \ {\n                int index = ch - key;\n                if (index > 'z') {\n\
+    \                  index = (index -'z' - 1) + 'a';\n                }\n      \
+    \          sb.append((char) index);\n            } else {\n                sb.append(ch);\n\
+    \            }\n            */\n        }\n        return sb.toString();     \
+    \    \n    }\n    \n    public static void main(String[] args) {\n        //System.out.println(\"\
+    Hello World!\");\n        //String toEncrypt = \"we found a treasure!\";\n   \
+    \     Scanner scan = new Scanner(System.in);\n        String action = scan.nextLine();\n\
+    \        String message = scan.nextLine();\n        int key = scan.nextInt();\n\
+    \        \n        switch (action) {\n            case \"dec\":\n            \
+    \    System.out.println(decrpyt(message, key));\n            break;\n        \
+    \    \n            case \"enc\":\n                System.out.println(encrpyt(message,\
+    \ key));\n            break;\n            \n        }\n\n    }\n}\n"
+  learner_created: false
+- name: test/EncryptDecryptTest.java
+  visible: false
+  text: |
+    import org.hyperskill.hstest.stage.StageTest;
+    import org.hyperskill.hstest.testcase.CheckResult;
+    import org.hyperskill.hstest.testcase.TestCase;
+
+    import java.util.List;
+
+    public class EncryptDecryptTest extends StageTest<String> {
+
+        @Override
+        public List<TestCase<String>> generate() {
+            return List.of(
+                new TestCase<String>()
+                    .addArguments(
+                        "-mode", "enc",
+                        "-key", "5",
+                        "-data", "Welcome to hyperskill!"
+                    )
+                    .setAttach("\\jqhtrj%yt%m~ujwxpnqq&"),
+
+                new TestCase<String>()
+                    .addArguments(
+                        "-key", "0",
+                        "-mode", "enc",
+                        "-data", "Hello"
+                    )
+                    .setAttach("Hello"),
+
+                new TestCase<String>()
+                    .addArguments(
+                        "-key", "1",
+                        "-data", "012345678",
+                        "-mode", "enc"
+                    )
+                    .setAttach("123456789"),
+
+                new TestCase<String>()
+                    .addArguments(
+                        "-mode", "dec",
+                        "-data", "\\jqhtrj%yt%m~ujwxpnqq&",
+                        "-key", "5"
+                    )
+                    .setAttach("Welcome to hyperskill!"),
+
+                new TestCase<String>()
+                    .addArguments(
+                        "-mode", "dec",
+                        "-key", "0",
+                        "-data", "Hi"
+                    )
+                    .setAttach("Hi"),
+
+                new TestCase<String>()
+                    .addArguments(
+                        "-mode", "dec",
+                        "-key", "1",
+                        "-data", "222233334444"
+                    )
+                    .setAttach("111122223333")
+            );
+        }
+
+        @Override
+        public CheckResult check(String reply, String clue) {
+            return new CheckResult(reply.trim().equals(clue.trim()));
+        }
+    }
+  learner_created: false
+feedback_link: https://hyperskill.org/projects/46/stages/248/implement#comment
+status: Solved
+record: 2

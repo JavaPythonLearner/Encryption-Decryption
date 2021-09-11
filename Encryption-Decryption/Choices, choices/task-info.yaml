@@ -1,0 +1,219 @@
+type: edu
+custom_name: stage6
+files:
+- name: src/encryptdecrypt/Main.java
+  visible: true
+  text: "package encryptdecrypt;\nimport java.util.Scanner;\n\npublic class Main {\n\
+    \    \n    public static String encrpyt(String toEncrypt, int key) {\n       \
+    \ char[] chars = toEncrypt.toCharArray();\n        StringBuilder sb = new StringBuilder();\n\
+    \        \n        for (char ch : chars) {\n            sb.append((char) (ch +\
+    \ key));\n            /*\n            if (Character.isLetter(ch)) {\n        \
+    \        int index = ch + key;\n                if (index > 'z') {\n         \
+    \         index = (index -'z' - 1) + 'a';\n                }\n               \
+    \ sb.append((char) index);\n            } else {\n                sb.append(ch);\n\
+    \            }\n            */\n        }\n        return sb.toString();     \
+    \    \n    }\n    \n    public static String decrpyt(String toEncrypt, int key)\
+    \ {\n        char[] chars = toEncrypt.toCharArray();\n        StringBuilder sb\
+    \ = new StringBuilder();\n        \n        for (char ch : chars) {\n        \
+    \    sb.append((char) (ch - key));\n            /*\n            if (Character.isLetter(ch))\
+    \ {\n                int index = ch - key;\n                if (index > 'z') {\n\
+    \                  index = (index -'z' - 1) + 'a';\n                }\n      \
+    \          sb.append((char) index);\n            } else {\n                sb.append(ch);\n\
+    \            }\n            */\n        }\n        return sb.toString();     \
+    \    \n    }\n    \n    public static void main(String[] args) {\n        //System.out.println(\"\
+    Hello World!\");\n        //String toEncrypt = \"we found a treasure!\";\n   \
+    \     \n        /*\n        Scanner scan = new Scanner(System.in);\n        String\
+    \ action = scan.nextLine();\n        String message = scan.nextLine();\n     \
+    \   int key = scan.nextInt();\n        */\n        \n        /*\n        If there\
+    \ is no -mode, the program should work in enc mode.\n        If there is no -key,\
+    \ the program should consider that key = 0.\n        If there is no -data, the\
+    \ program should assume that the data is an empty string\n        */\n       \
+    \ String data = \"\";\n        String mode = \"enc\";\n        int key = 0;\n\
+    \                \n        for (int i = 0;i < args.length; i += 2) {\n       \
+    \     switch (args[i]) {\n                case \"-mode\":\n                  \
+    \  mode = args[i + 1];\n                    break;\n            \n           \
+    \     case \"-key\":\n                    key = Integer.parseInt(args[i + 1]);\n\
+    \                    break;\n                    \n                case \"-data\"\
+    :\n                    data = args[i + 1];\n                    break;\n     \
+    \       }\n        }\n        \n        if (mode.equals(\"enc\")) {\n        \
+    \    System.out.println(encrpyt(data, key));\n        } else {\n            System.out.println(decrpyt(data,\
+    \ key));\n        }\n    }\n}\n"
+  learner_created: false
+- name: test/EncryptDecryptTest.java
+  visible: false
+  text: |
+    import org.hyperskill.hstest.common.FileUtils;
+    import org.hyperskill.hstest.stage.StageTest;
+    import org.hyperskill.hstest.testcase.CheckResult;
+    import org.hyperskill.hstest.testcase.TestCase;
+
+    import java.io.IOException;
+    import java.nio.charset.StandardCharsets;
+    import java.nio.file.Files;
+    import java.nio.file.NoSuchFileException;
+    import java.nio.file.Path;
+    import java.nio.file.Paths;
+    import java.util.List;
+
+    public class EncryptDecryptTest extends StageTest<String> {
+
+        @Override
+        public List<TestCase<String>> generate() {
+            return List.of(
+                new TestCase<String>()
+                    .addArguments(
+                        "-alg", "unicode",
+                        "-mode", "enc",
+                        "-key", "5",
+                        "-in", "in.txt",
+                        "-out", "output.txt"
+                    )
+                    .setAttach("\\jqhtrj%yt%m~ujwxpnqq&")
+                    .addFile("in.txt", "Welcome to hyperskill!"),
+
+                new TestCase<String>()
+                    .addArguments(
+                        "-key", "0",
+                        "-mode", "enc",
+                        "-alg", "unicode",
+                        "-in", "input.txt",
+                        "-out", "output.txt"
+                    )
+                    .setAttach("Hello")
+                    .addFile("input.txt", "Hello"),
+
+                new TestCase<String>()
+                    .addArguments(
+                        "-key", "1",
+                        "-in", "i.txt",
+                        "-alg", "unicode",
+                        "-out", "output.txt",
+                        "-mode", "enc"
+                    )
+                    .setAttach("123456789")
+                    .addFile("i.txt", "012345678"),
+
+                new TestCase<String>()
+                    .addArguments(
+                        "-mode", "dec",
+                        "-in", "input.txt",
+                        "-out", "output.txt",
+                        "-alg", "unicode",
+                        "-key", "5"
+                    )
+                    .setAttach("Welcome to hyperskill!")
+                    .addFile("input.txt", "\\jqhtrj%yt%m~ujwxpnqq&"),
+
+                new TestCase<String>()
+                    .addArguments(
+                        "-mode", "dec",
+                        "-alg", "unicode",
+                        "-key", "0",
+                        "-in", "input.txt",
+                        "-out", "output.txt"
+                    )
+                    .setAttach("Hi")
+                    .addFile("input.txt", "Hi"),
+
+                new TestCase<String>()
+                    .addArguments(
+                        "-mode", "dec",
+                        "-key", "1",
+                        "-in", "input.txt",
+                        "-alg", "unicode",
+                        "-out", "output.txt"
+                    )
+                    .setAttach("111122223333")
+                    .addFile("input.txt", "222233334444"),
+
+                new TestCase<String>()
+                    .addArguments(
+                        "-mode", "enc",
+                        "-key", "5",
+                        "-in", "input.txt",
+                        "-alg", "shift",
+                        "-out", "output.txt"
+                    )
+                    .setAttach("bjqhtrj yt mdujwxpnqq")
+                    .addFile("input.txt", "welcome to hyperskill"),
+
+                new TestCase<String>()
+                    .addArguments(
+                        "-mode", "dec",
+                        "-key", "10",
+                        "-in", "input.txt",
+                        "-alg", "shift",
+                        "-out", "output.txt"
+                    )
+                    .setAttach("treasure")
+                    .addFile("input.txt", "dbokcebo"),
+
+                new TestCase<String>()
+                    .addArguments(
+                        "-mode", "enc",
+                        "-key", "12",
+                        "-in", "input.txt",
+                        "-alg", "shift",
+                        "-out", "output.txt"
+                    )
+                    .setAttach("cphpchdjcijdjibhdjebhjucspucmdmudbnuccup")
+                    .addFile("input.txt", "qdvdqvrxqwxrxwpvrxspvxiqgdiqarairpbiqqid"),
+
+                new TestCase<String>()
+                    .addArguments(
+                        "-mode", "dec",
+                        "-key", "10",
+                        "-in", "input.txt",
+                        "-alg", "shift",
+                        "-out", "output.txt"
+                    )
+                    .setAttach("y")
+                    .addFile("input.txt", "i"),
+
+                new TestCase<String>()
+                    .addArguments(
+                        "-mode", "enc",
+                        "-key", "10",
+                        "-in", "input.txt",
+                        "-alg", "shift",
+                        "-out", "output.txt"
+                    )
+                    .setAttach("i")
+                    .addFile("input.txt", "y")
+            );
+        }
+
+        @Override
+        public CheckResult check(String reply, String clue) {
+            String fileName = "output.txt";
+            String output;
+
+            try {
+                Path path = Paths.get(FileUtils.CURRENT_DIR + fileName);
+                output = Files.readString(path, StandardCharsets.UTF_8);
+            } catch (NoSuchFileException e) {
+                return new CheckResult(false, "File output.txt not found!");
+            } catch (IOException e) {
+                return new CheckResult(false, "Cannot read from file!");
+            }
+
+            if (!output.trim().equals(clue.trim())) {
+                return new CheckResult(false, "Wrong result in the file!");
+            }
+
+            return new CheckResult(true);
+        }
+
+    }
+  learner_created: false
+- name: output.txt
+  visible: true
+  text: 111122223333
+  learner_created: true
+feedback_link: https://hyperskill.org/projects/46/stages/250/implement#comment
+status: Solved
+feedback:
+  message: Well done! You've finished the project. Select a new project on <a href="https://hyperskill.org/projects">JetBrains
+    Academy</a> to continue learning.
+  time: Sat, 11 Sep 2021 09:25:08 UTC
+record: -1
